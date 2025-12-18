@@ -47,11 +47,13 @@ export class AccountRepository {
   }
 
   async findUserAccount(userId: number, accountId: number) {
-    const account = await this.prisma.account.findFirst({
-      where: { userId, id: accountId },
+    const account = await this.prisma.account.findUnique({
+      where: {
+        id: accountId,
+      },
     });
 
-    if (!account) {
+    if (!account || account.userId !== userId) {
       throw new NotFoundException('Account not found');
     }
 
